@@ -1,0 +1,11 @@
+insert into roles values(1, "admin" , "avis");
+insert into roles values(2, "customer" , "c");
+insert into users values(1,0,"siva","siva123",2);
+insert into users values(2,0,"admin","admin",1);
+insert into customer_master values("sriharikota" , "siva" , 1);
+--insert into item_master values(1, "daal" , 100.50, 110, "kg");
+--insert into item_master values(2, "rice" , 10.50, 110, "kg");
+--insert into item_master values(3, "rawa" , 300.50, 110, "g");
+--insert into item_master values(4, "biscuit" , 400.50, 111, "g");
+--insert into item_master values(5, "sweet" , 300.50, 111, "g");
+--insert into item_master values(6, "pencil" , 30, 112, "p");
