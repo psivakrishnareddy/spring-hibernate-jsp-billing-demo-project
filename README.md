@@ -1,7 +1,7 @@
-# spring-hibernate-jsp-billing-demo-project
+# spring-hibernate-jsp-billing-demo-project 
 This is a Demo application developed using Spring , spring mvc , hibernate and jsp.
 
-
+© P SIVA KRISHNA REDDY
 
 * Tomcat server base url - '/' change from "springhiberannoweb"
 
