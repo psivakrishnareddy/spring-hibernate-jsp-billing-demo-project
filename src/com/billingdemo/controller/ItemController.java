@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
@@ -26,11 +27,13 @@ import com.billingdemo.pojo.ActionMsg;
 import com.billingdemo.pojo.ActionMsgs;
 import com.billingdemo.service.ItemService;
 
+import jdk.internal.org.jline.utils.Log;
+
 @Controller
 @RequestMapping("/item")
 @ComponentScan("com.billingdemo") 
 public class ItemController {
-	
+	private static final Logger log = Logger.getLogger(ItemController.class);
 	@Autowired
 	private ItemService itemService;
 	
@@ -98,7 +101,8 @@ public class ItemController {
 //						e.printStackTrace();
 						throw new ImageUploadException();
 					}
-	                System.out.println("Saving file: " + fileUpload.getOriginalFilename());
+//	                System.out.println("Saving file: " + fileUpload.getOriginalFilename());
+	                log.info("Saving file: " + fileUpload.getOriginalFilename());
 	                              
 	            }
 	        
@@ -108,6 +112,7 @@ public class ItemController {
 		} catch (Exception e) {
 			// TODO: handle exception
 //			e.printStackTrace();
+			log.error("Adding item failed" , new ItemAddException());
 			throw new ItemAddException();
 		}
 		

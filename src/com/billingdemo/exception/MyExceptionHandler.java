@@ -27,5 +27,9 @@ public class MyExceptionHandler {
 	public String invoiceDownldExceptio(InvoiceDownloadException exception) {
 		return "error";
 	}
+	@ExceptionHandler(value = ReportGenerationException.class)
+	public String reportGenerationExcepti(ReportGenerationException exception) {
+		return "error";
+	}
 
 }

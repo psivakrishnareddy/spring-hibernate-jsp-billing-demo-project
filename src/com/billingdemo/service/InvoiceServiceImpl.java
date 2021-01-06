@@ -7,12 +7,15 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.billingdemo.controller.AppController;
 import com.billingdemo.dao.CustomerDAO;
 import com.billingdemo.dao.InvoiceDAO;
 import com.billingdemo.dao.ItemDAO;
+import com.billingdemo.exception.ReportGenerationException;
 import com.billingdemo.model.CustomerDTO;
 import com.billingdemo.model.InvoiceDTO;
 import com.billingdemo.model.InvoiceTransactionDTO;
@@ -23,6 +26,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 @Service("InvoiceService")
 @Transactional
 public class InvoiceServiceImpl implements InvoiceService {
+	private static final Logger log = Logger.getLogger(InvoiceServiceImpl.class);
 
 	@Autowired
 	private InvoiceDAO invoicedao;
@@ -37,10 +41,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 		// TODO Auto-generated method stub
 		CustomerDTO customer = cusDao.getUserByName(uname);
 		
-		System.out.println(customer);
-		System.out.println("Customer Items..");
-		System.out.println(citems);
-		System.out.println("user: "+ uname);
+		log.info(customer);
+		log.info("Customer Items..");
+		log.info(citems);
+		log.info("user: "+ uname);
 		
 		InvoiceDTO invoice= new InvoiceDTO();
 		invoice.setInv_date(Date.valueOf(LocalDate.now()));
@@ -62,7 +66,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		}
 		invoice.setAmount(total);
 		
-		System.out.println("Creating Invoice..");
+		log.info("Creating Invoice..");
 		invoicedao.addInvoice(invoice);
 		return generatePDFBill(invoice, customer, filepath);
 	
@@ -73,7 +77,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		// TODO Auto-generated method stub
 
 		try {
-			System.out.println(filepath);
+			log.info(filepath);
 	        Document document = new Document();
 	        String invname="invoice" + LocalDate.now() + invoice.getInvno() + ".pdf";
 	        String FILE = filepath + invname;
@@ -85,7 +89,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	        PDFgenerator.createInvoice(document , invoice , customer);
 	        	
 	        document.close();
-	        System.out.println("BILL Generated Successfully.... " );
+	        log.info("BILL Generated Successfully.... " );
 	        return invname;
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -101,7 +105,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 			ReportsGenerator.createExcel(invoicedao.getReportInvoices());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			
+			log.error("Report Generation Failed " + e, new ReportGenerationException());
+			throw new ReportGenerationException();
 		}
 		
 	}

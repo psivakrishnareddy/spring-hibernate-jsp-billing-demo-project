@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Invoice</title>
+<title>Proceed!</title>
 <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
 </head>
 <body>

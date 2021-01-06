@@ -5,6 +5,7 @@ import java.sql.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ import com.billingdemo.util.constants;
 @ComponentScan("com.billingdemo") 
 public class AppController {
 	
+	private static final Logger log = Logger.getLogger(AppController.class);	
+	
 	@Autowired
 	private UserService userService;
 	
@@ -34,7 +37,13 @@ public class AppController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String hello() {
-		System.out.println("Welcome to the Service...");
+//		System.out.println("Welcome to the Service...");
+		if(log.isDebugEnabled()) {
+			
+			log.debug("Welcome to the Service");
+			
+		}
+		log.info("welcome info test");
 		return "index";
 		
 	}
@@ -57,7 +66,8 @@ public class AppController {
 	public String logout(HttpSession session) {
 		String uname = (String)session.getAttribute("uname");
 		userService.updateFlag(uname, 0);
-		System.out.println("Loggin Out " + uname);
+//		System.out.println("Loggin Out " + uname);
+		log.info("Loggin Out " + uname );
 		session.invalidate();
 		return "redirect:/login";
 		
@@ -98,7 +108,8 @@ public class AppController {
 			userService.updateFlag(uname, 1);
 			return "redirect:/admin";
 		}else {
-			System.out.println("Permission Denied! Check Your Pass Code");
+//			System.out.println("Permission Denied! Check Your Pass Code");
+			log.info("Permission Denied! Check Your Pass Code");
 			return "redirect:/login";
 		}
 		
@@ -129,8 +140,10 @@ public class AppController {
 	}
 	@RequestMapping( value = "/checklogin",method = RequestMethod.POST)
 	public String userLogin(@RequestParam String uname, @RequestParam String upass, HttpSession session,HttpServletRequest request) {
-		System.out.println("Login Controller...........");
-	    System.out.println(uname+":"+ upass);
+//		System.out.println("Login Controller...........");
+		log.info("Logging Controller - "+ uname+":"+ upass);
+		
+//	    System.out.println(uname+":"+ upass);
 	    constants result = userService.checkUser(uname, upass);
 		ActionMsgs errors = new ActionMsgs();
 	    if(result.getValue() == 1) {
@@ -139,14 +152,15 @@ public class AppController {
 			return "redirect:/welcome";
 		}
 		else if(result.getValue() == 0) {
-			System.out.println("PLEASE CHECK YOUR PASSWORD");
+//			System.out.println("PLEASE CHECK YOUR PASSWORD");
+			log.error("PLEASE CHECK YOUR PASSWORD");
 			ActionMsg error = new ActionMsg("The passworrd is wrong");
 			errors.setErrors(error);
 			request.setAttribute("errors", errors);
 			return "login";
 		}
 		else if(result.getValue() == 3){
-			System.out.println("YOUR ARE ALREADY LOGGED IN");
+//			log.info("YOUR ARE ALREADY LOGGED IN");
 			session.setAttribute("uname", uname);
 			userService.updateFlag(uname, 0);
 		
@@ -162,7 +176,8 @@ public class AppController {
 		}else if(result.getValue() == 11) {
 			session.setAttribute("uname", uname);
 			userService.updateFlag(uname, 1);
-			System.out.println("Admins Login Success!");
+//			System.out.println("Admins Login Success!");
+			log.info("admin logged sucessfully..");
 			return "redirect:/admin";
 		}
 		return "register";
@@ -183,6 +198,7 @@ public class AppController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 //		e.printStackTrace();
+			log.error("INvoice Download Error" , new InvoiceCreationException());
 			throw new InvoiceCreationException();
 		}
 		return "report";

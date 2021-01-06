@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Attention</title>
 </head>
 <body>
-<h1>Something web Wrong....</h1>
+<h1>Something went Wrong....</h1>
 </body>
 </html>

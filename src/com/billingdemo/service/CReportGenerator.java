@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -11,10 +12,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.billingdemo.controller.AppController;
 import com.billingdemo.model.ReportInvoice;
 
 public class CReportGenerator {
 	 public static void createExcel(List<ReportInvoice> invlist) throws Exception{
+		 final Logger log = Logger.getLogger(CReportGenerator.class);
 		   @SuppressWarnings("resource")
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		     XSSFSheet sheet = workbook.createSheet("Reports");
@@ -62,8 +65,12 @@ public class CReportGenerator {
 	            
 	       try (FileOutputStream outputStream = new FileOutputStream("C:/Excels/CustomerReports " +LocalDate.now() + ".xls")) {
 	           workbook.write(outputStream);
-	           System.out.println("Excel Generated");
-	       }
+//	           System.out.println("Excel Generated");
+	           log.info("Excel Generated at : " + "C:/Excels/CustomerReports " +LocalDate.now() + ".xls");
+	       }catch (Exception e) {
+			// TODO: handle exception
+	    	   log.error(e);
+		}
 	   }
 	    
 }

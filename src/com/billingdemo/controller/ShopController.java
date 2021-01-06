@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,13 @@ import com.billingdemo.model.ItemDTO;
 import com.billingdemo.service.InvoiceService;
 import com.billingdemo.service.ItemService;
 
+import jdk.internal.org.jline.utils.Log;
+
 @Controller
 @RequestMapping("/shop")
 @ComponentScan("com.billingdemo")
 public class ShopController {
+	private static final Logger log = Logger.getLogger(AppController.class);
 	@Autowired
 	private ItemService itemService;
 	
@@ -44,7 +48,8 @@ public class ShopController {
 		if(selectitems== null || selectitems.size() == 0) {
 			return "comeback";
 		}
-		System.out.println("invoice page");
+//		System.out.println("invoice page");
+		log.info("Invoice Page");
 		return "invoice";
 	}
 	
@@ -55,7 +60,8 @@ public class ShopController {
 	
 	@RequestMapping(value = "/shop-{shopno}" , method =  RequestMethod.GET )
 	public ModelAndView shopGET(ModelAndView mnv, @PathVariable int shopno) {
-		System.out.println("Shop1 Loading..");
+//		System.out.println("Shop1 Loading..");
+		log.info("Shop 1 loading..");
 
 		List<ItemDTO> items= itemService.getItemsByShop(shopno);
 		mnv.addObject("itemsObj", items);
@@ -70,7 +76,8 @@ public class ShopController {
 	 */
 	@RequestMapping(value = "/shop-{shopno}" , method =  RequestMethod.POST )
 	public ModelAndView shopPOST(ModelAndView mnv, @PathVariable int shopno, HttpServletRequest request, HttpSession session) {
-		System.out.println("Shop-"+shopno +" Loading..");
+//		System.out.println("Shop-"+shopno +" Loading..");
+		log.info("Shop-"+shopno +" Loading..");
 
 		Enumeration<String> e=request.getParameterNames();
 		List<String> selectitems;
@@ -87,7 +94,8 @@ public class ShopController {
 			if(!name.contains("qty")) {
 				
 				String qty=request.getParameter(value+"-qty");
-				System.out.println("qty: " +qty + "item: " + value);
+//				System.out.println("qty: " +qty + "item: " + value);
+				log.info("qty: " +qty + "item: " + value);
 				selectitems.add(value+":"+qty);
 			}
 		}
@@ -112,6 +120,7 @@ public class ShopController {
 		System.out.println(selectitems);
 		String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/downloads/pdf/");
 //		System.out.println(dataDirectory);
+		log.info(dataDirectory);
 		String file = invoiceService.createInvoice(selectitems, (String)session.getAttribute("uname") ,dataDirectory );
 		session.removeAttribute("selected-items");
 		mnv.addObject("invoice", file);
@@ -139,6 +148,7 @@ public class ShopController {
             } 
             catch (Exception ex) {
 //                ex.printStackTrace();
+            	log.error("Invoice Download Error" , new InvoiceDownloadException());
             	throw new InvoiceDownloadException();
             }
         }

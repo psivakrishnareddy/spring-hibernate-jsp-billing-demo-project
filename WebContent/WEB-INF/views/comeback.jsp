@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Continue</title>
 <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
 </head>
 <body>
